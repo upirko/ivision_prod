@@ -150,7 +150,7 @@ export default function Dashboard() {
                     <label>Кол-во автомобилей на парковке:</label> <b>{objects.length}</b>
                   </p>
                   <p>
-                    <label>Кол-во свободных мест на парковке:</label> <b>{activeStream.max_count - objects.length}</b>
+                    <label>Кол-во свободных мест на парковке:</label> <b>{Math.max(activeStream.max_count - objects.length, 0)}</b>
                   </p>
                   <button onClick={() => setShowArea(!showArea)}>
                     {showArea ? 'Скрыть' : 'Показать'} область парковки
