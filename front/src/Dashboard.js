@@ -68,15 +68,7 @@ export default function Dashboard() {
     }
     switch (lastJsonMessage.event) {
       case 'init':
-        setStreams(lastJsonMessage.payload.map(s => {
-          s.area = [
-            [0.3, 0.3],
-            [0.3, 0.7],
-            [0.5, 0.7],
-            [0.5, 0.3],
-          ];
-          return s;
-        }));
+        setStreams(lastJsonMessage.payload);
         break;
       case 'update':
         setObjects(lastJsonMessage.payload);
@@ -133,7 +125,7 @@ export default function Dashboard() {
               <Grid item xs={8}>
                 <div className={classes.videoContainer}>
                   <VideoPlayer videoSrc={activeStream.source}/>
-                  <DataLayer area={showArea ? activeStream.area : []} objects={objects} />
+                  <DataLayer area={showArea ? activeStream.roi : []} objects={objects} />
                 </div>
               </Grid>
               <Grid item xs={4}>
