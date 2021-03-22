@@ -66,6 +66,7 @@ def process_video_stream(index):
                 'width': w/width_,
                 'height': h/height_
             })
+            r.set(index, json.dumps({'video_src': video_src, 'coords': coords}))
 
 def is_cross(a,b):
     ax1, ay1, ax2, ay2 = a[0], a[1], a[2], a[3]          # прямоугольник А 
