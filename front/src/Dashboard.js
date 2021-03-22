@@ -62,6 +62,18 @@ export default function Dashboard() {
     lastJsonMessage,
   } = useWebSocket(WS_URL);
 
+  const onClick = (e) => {
+    if (!window.debugMode) {
+      return;
+    }
+    const rect = e.target.getBoundingClientRect();
+    const point = [
+      (e.clientX - rect.left) / rect.width,
+      (e.clientY - rect.top) / rect.height,
+    ];
+    console.log(point);
+  }
+
   useEffect(() => {
     if (!lastJsonMessage) {
       return;
@@ -96,6 +108,7 @@ export default function Dashboard() {
       event: 'changeStream',
       payload: streams.findIndex(s => s === activeStream)
     });
+    setObjects([]);
   }, [activeStream, sendJsonMessage])
 
   return (
@@ -125,7 +138,7 @@ export default function Dashboard() {
               <Grid item xs={8}>
                 <div className={classes.videoContainer}>
                   <VideoPlayer videoSrc={activeStream.source}/>
-                  <DataLayer area={showArea ? activeStream.roi : []} objects={objects} />
+                  <DataLayer area={showArea ? activeStream.roi : []} objects={objects} onClick={onClick}/>
                 </div>
               </Grid>
               <Grid item xs={4}>
@@ -135,6 +148,9 @@ export default function Dashboard() {
                   </h3>
                   <p>
                     <label>Кол-во автомобилей на парковке:</label> <b>{objects.length}</b>
+                  </p>
+                  <p>
+                    <label>Кол-во свободных мест на парковке:</label> <b>{activeStream.max_count - objects.length}</b>
                   </p>
                   <button onClick={() => setShowArea(!showArea)}>
                     {showArea ? 'Скрыть' : 'Показать'} область парковки

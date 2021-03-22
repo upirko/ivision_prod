@@ -1,6 +1,4 @@
-import asyncio
 import os
-from itertools import repeat
 import json
 from multiprocessing import Process, Manager
 import logging
@@ -22,8 +20,8 @@ if __name__ == '__main__':
         exit(1)
     
     processes = list()
-    for i in range(1):
-        p = Process(target=process_video_stream, args=(i, STREAMS[i].get('source') ))
+    for i in range(len(STREAMS)):
+        p = Process(target=process_video_stream, args=(i, ))
         p.start()
         processes.append(p)
     server = Server(HOST, PORT)
