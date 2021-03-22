@@ -1,5 +1,5 @@
-# iVision
+# iVision by Natlex team
 
-In the project directory, you can run, if you can:
+In the project directory, you can run:
 
 ### `docker-compose up`
