@@ -24,4 +24,4 @@ For start server complete the following command: `python main.py`
   
 To install dependencies please run `npm install` in front directory
 
-To run application please run `npm start` in front directory
+For start frontend application please run `npm start` in front directory
