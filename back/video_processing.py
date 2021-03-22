@@ -40,7 +40,7 @@ def process_video_stream(index):
 
     area = list()
     for point in AREA:
-        area.append([point[0] * width_, point[1] * height_])
+        area.append([int(point[0] * width_), int(point[1] * height_)])
 
     pts = np.array(area)
     pts_mask = pts - pts.min(axis=0)
@@ -68,11 +68,6 @@ def process_video_stream(index):
 
             x = x + x_
             y = y + y_
-            w = w + x_
-            h = h + y_
-
-            # if not is_cross(area, [x, y, x + w, y + h]):
-            #     continue
             
             coords.append({
                 'x': x/width_,
@@ -81,27 +76,3 @@ def process_video_stream(index):
                 'height': h/height_
             })
         r.set(index, json.dumps(coords))
-
-def is_cross(a,b):
-    ax1, ay1, ax2, ay2 = a[0], a[1], a[2], a[3]          # прямоугольник А 
-    bx1, by1, bx2, by2 = b[0], b[1], b[2], b[3]    # прямоугольник B
-    # это были координаты точек диагонали по каждому прямоугольнику
-
-    # 1. Проверить условия перекрытия, например, если XПA<XЛB , 
-    #    то прямоугольники не пересекаются,и общая площадь равна нулю.
-    #   (это случай, когда они справа и слева) и аналогично, если они сверху
-    #    и снизу относительно друг друга.   
-    #    (XПА - это  Х Правой точки прямоугольника А)
-    #    (ХЛВ - Х Левой точки прямоугольника В )
-    #    нарисуй картинку (должно стать понятнее)
-
-    xA = [ax1, ax2]  # координаты x обеих точек прямоугольника А
-    xB = [bx1, bx2]  # координаты x обеих точке прямоугольника В
-
-    yA = [ay1, ay2]  # координаты x обеих точек прямоугольника А
-    yB = [by1, by2]  # координаты x обеих точек прямоугольника В
-
-    result = max(xA) < min(xB) or max(yA) < min(yB) or min(yA) > max(yB)
-    logging.info(f'CHECK: {a} with {b} = {result}')
-
-    return result

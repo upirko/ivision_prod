@@ -96,6 +96,7 @@ export default function Dashboard() {
       event: 'changeStream',
       payload: streams.findIndex(s => s === activeStream)
     });
+    setObjects([]);
   }, [activeStream, sendJsonMessage])
 
   return (
@@ -135,6 +136,9 @@ export default function Dashboard() {
                   </h3>
                   <p>
                     <label>Кол-во автомобилей на парковке:</label> <b>{objects.length}</b>
+                  </p>
+                  <p>
+                    <label>Кол-во свободных мест на парковке:</label> <b>{activeStream.max_count - objects.length}</b>
                   </p>
                   <button onClick={() => setShowArea(!showArea)}>
                     {showArea ? 'Скрыть' : 'Показать'} область парковки
