@@ -79,6 +79,8 @@ class Server:
                     streamId = client.get('streamId', None)
                     client_ = client.get('client', None)
                     if client_ is not None and streamId is not None:
-                        data = json.loads(r.get(streamId))
-                        await self.send(send_data('update', data.get('coords')), client_)
+                        streamId_ = r.get(streamId)
+                        if streamId_ is not None:
+                            data = json.loads(streamId_)
+                            await self.send(send_data('update', data.get('coords')), client_)
                 await asyncio.sleep(0.2)
