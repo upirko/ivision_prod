@@ -5,6 +5,7 @@ import time
 import redis
 import json
 import math
+import numpy as np
 from utils import STREAMS
 
 REDIS_HOST = os.getenv('REDIS_HOST', None)
@@ -28,6 +29,10 @@ with open(current_directory + '/model/classes.txt', 'r') as file:
 def process_video_stream(index):
     AREA = STREAMS[index].get('roi')
     video_src = STREAMS[index].get('source')
+    pts = np.array(AREA)
+    pts_mask = pts - pts.min(axis=0)
+    rect = cv2.boundingRect(pts)
+    x_,y_,w_,h_ = rect
 
     logging.info(f'Start processing stream: {video_src}')
     video_capture = cv.VideoCapture(video_src)
@@ -37,18 +42,23 @@ def process_video_stream(index):
     width_  = video_capture.get(cv.CAP_PROP_FRAME_WIDTH)
     height_ = video_capture.get(cv.CAP_PROP_FRAME_HEIGHT)
 
-    area = list()
-    area.append(AREA[1][0] * width_)
-    area.append(AREA[1][1] * height_)
-    area.append(AREA[3][0] * width_)
-    area.append(AREA[3][1] * height_)
+    # area = list()
+    # area.append(AREA[1][0] * width_)
+    # area.append(AREA[1][1] * height_)
+    # area.append(AREA[3][0] * width_)
+    # area.append(AREA[3][1] * height_)
 
     while True:
         if not video_capture.isOpened():
             continue
         
         ret, frame = video_capture.read()
-        classes, _, boxes = dm.detect(frame, confThreshold=0.1, nmsThreshold=0.4)
+        croped = frame[y_:y_+h_, x_:x_+w_].copy()
+        mask = np.zeros(croped.shape[:2], np.uint8)
+        cv2.drawContours(mask, [pts_mask], -1, (255, 255, 255), -1, cv2.LINE_AA)
+        dst = cv2.bitwise_and(croped, croped, mask=mask)
+
+        classes, _, boxes = dm.detect(dst, confThreshold=0.1, nmsThreshold=0.4)
 
         coords = list()
         for classId, box in zip(classes, boxes):
@@ -57,8 +67,13 @@ def process_video_stream(index):
 
             x, y, w, h = [b for b in box.tolist()]
 
-            if not is_cross(area, [x, y, x + w, y + h]):
-                continue
+            x = x + x_
+            y = y + y_
+            w = w + x_
+            h = h + y_
+
+            # if not is_cross(area, [x, y, x + w, y + h]):
+            #     continue
             
             coords.append({
                 'x': x/width_,
@@ -66,7 +81,7 @@ def process_video_stream(index):
                 'width': w/width_,
                 'height': h/height_
             })
-        r.set(index, json.dumps({'video_src': video_src, 'coords': coords}))
+        r.set(index, json.dumps(coords))
 
 def is_cross(a,b):
     ax1, ay1, ax2, ay2 = a[0], a[1], a[2], a[3]          # прямоугольник А 
@@ -87,7 +102,7 @@ def is_cross(a,b):
     yA = [ay1, ay2]  # координаты x обеих точек прямоугольника А
     yB = [by1, by2]  # координаты x обеих точек прямоугольника В
 
-    result = max(xA)<min(xB) or max(yA) < min(yB) or min(yA) > max(yB)
+    result = max(xA) < min(xB) or max(yA) < min(yB) or min(yA) > max(yB)
     logging.info(f'CHECK: {a} with {b} = {result}')
 
     return result
