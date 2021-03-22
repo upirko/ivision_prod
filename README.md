@@ -13,7 +13,10 @@ If you want to run server not in **Docker** env then you need to have **backend 
     1. Redis the latest version
     2. Python 3.7.9
 
-To install dependencies please run `pip install -r requirements.txt` in back directory
+To install dependencies please run `pip install -r requirements.txt` in back directory.
+
+For start server complete the following command: `python main.py`
+
 
 ### Minimal requirements for frontend:
 
