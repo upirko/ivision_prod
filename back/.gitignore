@@ -1,0 +1,13 @@
+venv
+.vscode
+__pycache__*
+frames
+model/keras-yolo3
+*.jpg
+*.h5
+*.mov
+*.xml
+yolov4.weights
+main_cp.py
+web
+.DS_Store

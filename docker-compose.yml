@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  front:
+    build: ./front
+    container_name: front
+    ports:
+      - 80:80
+
+  back:
+    build: ./back
+    container_name: back
+    ports:
+      - 5000:5000
+    environment:
+      - PORT=5000
+      - HOST=0.0.0.0
+      - REDIS_HOST=hakatonRedis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+      
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - 6379:6379
