@@ -62,6 +62,18 @@ export default function Dashboard() {
     lastJsonMessage,
   } = useWebSocket(WS_URL);
 
+  const onClick = (e) => {
+    if (!window.debugMode) {
+      return;
+    }
+    const rect = e.target.getBoundingClientRect();
+    const point = [
+      (e.clientX - rect.left) / rect.width,
+      (e.clientY - rect.top) / rect.height,
+    ];
+    console.log(point);
+  }
+
   useEffect(() => {
     if (!lastJsonMessage) {
       return;
@@ -126,7 +138,7 @@ export default function Dashboard() {
               <Grid item xs={8}>
                 <div className={classes.videoContainer}>
                   <VideoPlayer videoSrc={activeStream.source}/>
-                  <DataLayer area={showArea ? activeStream.roi : []} objects={objects} />
+                  <DataLayer area={showArea ? activeStream.roi : []} objects={objects} onClick={onClick}/>
                 </div>
               </Grid>
               <Grid item xs={4}>
