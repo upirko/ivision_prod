@@ -40,8 +40,8 @@ def process_video_stream(index):
     area = list()
     area.append(AREA[1][0] * width_)
     area.append(AREA[1][1] * height_)
-    area.append(AREA[3][2] * width_)
-    area.append(AREA[3][3] * height_)
+    area.append(AREA[3][0] * width_)
+    area.append(AREA[3][1] * height_)
 
     while True:
         if not video_capture.isOpened():
