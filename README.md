@@ -16,3 +16,8 @@ If you want to run server not in **Docker** env then you need to have **backend 
 To install dependencies please run `pip install -r requirements.txt` in back directory
 
 ### Minimal requirements for frontend:
+
+    1. NodeJS
+  
+To install dependencies please run `npm install` in front directory
+To run application please run `npm start` in front directory
