@@ -22,7 +22,7 @@ if __name__ == '__main__':
         exit(1)
     
     processes = list()
-    for i in range(len(STREAMS)):
+    for i in range(1):
         p = Process(target=process_video_stream, args=(i, STREAMS[i].get('source') ))
         p.start()
         processes.append(p)
