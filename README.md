@@ -3,8 +3,7 @@
 In the project directory, you can run:
 ### `docker-compose up`
 
-Live demo
-### http://ivision.natlex.team
+Live demo http://ivision.natlex.team
 
 If you want to run server not in **Docker** env then you need to have **backend and fronted as separated processes**.
 
