@@ -34,21 +34,21 @@ def process_video_stream(index):
     video_capture.set(cv.CAP_PROP_BUFFERSIZE, 1)
     video_capture.set(cv.CAP_PROP_FPS, 2)
     video_capture.set(cv.CAP_PROP_POS_FRAMES , 1)
+    width_  = video_capture.get(cv.CAP_PROP_FRAME_WIDTH)
+    height_ = video_capture.get(cv.CAP_PROP_FRAME_HEIGHT)
+
+    area = list()
+    area.append(AREA[1][0] * width_)
+    area.append(AREA[1][1] * height_)
+    area.append(AREA[3][2] * width_)
+    area.append(AREA[3][3] * height_)
 
     while True:
         if not video_capture.isOpened():
             continue
         
         ret, frame = video_capture.read()
-        width_  = video_capture.get(cv.CAP_PROP_FRAME_WIDTH)
-        height_ = video_capture.get(cv.CAP_PROP_FRAME_HEIGHT)
         classes, _, boxes = dm.detect(frame, confThreshold=0.1, nmsThreshold=0.4)
-
-        area = list()
-        area.append(AREA[1][0] * width_)
-        area.append(AREA[1][1] * height_)
-        area.append(AREA[3][2] * width_)
-        area.append(AREA[3][3] * height_)
 
         coords = list()
         for classId, box in zip(classes, boxes):
